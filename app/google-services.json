@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1061893892928",
+    "project_id": "smartgardenassistent",
+    "storage_bucket": "smartgardenassistent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061893892928:android:3a66c6d6f0a7d21f6ce8a5",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3n_vEDoawowBFNLPWF5OCj0W1H9xLNDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061893892928:android:83cc38bce81596e76ce8a5",
+        "android_client_info": {
+          "package_name": "com.example.myapplication.ui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3n_vEDoawowBFNLPWF5OCj0W1H9xLNDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

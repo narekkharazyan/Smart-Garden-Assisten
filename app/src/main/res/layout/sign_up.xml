@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fon5"
-    tools:context=".MainActivity3">
+    tools:context=".SignUp">
 
     <EditText
-        android:id="@+id/editTextTextPostalAddress"
+        android:id="@+id/full_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
         android:ems="10"
+        android:hint="Full Name"
         android:inputType="textPostalAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -20,11 +21,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPostalAddress2"
+        android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="252dp"
         android:ems="10"
+        android:hint="Email"
         android:inputType="textPostalAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -32,11 +34,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPostalAddress3"
+        android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="304dp"
         android:ems="10"
+        android:hint="Password"
         android:inputType="textPostalAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -44,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/create_button"
         android:layout_width="174dp"
         android:layout_height="42dp"
         android:layout_marginTop="360dp"
@@ -56,14 +59,14 @@
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="212dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="164dp"
+        android:layout_width="325dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="160dp"
         android:fontFamily="@font/bentayog_font"
         android:text="Create An Account"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
