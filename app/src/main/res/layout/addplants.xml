@@ -4,12 +4,18 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp">
+    <Spinner
+        android:id="@+id/regions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <EditText
-        android:id="@+id/editTextFullName"
+        android:id="@+id/editTextFullName2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Plant Name" />
+
+
 
     <EditText
         android:id="@+id/editTextLocation"

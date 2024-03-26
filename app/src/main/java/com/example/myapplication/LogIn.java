@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LogIn extends AppCompatActivity {
     Button login;
@@ -40,7 +41,8 @@ public class LogIn extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,task -> {
             if(task.isSuccessful()){
-                homepage();
+                FirebaseUser user = mAuth.getCurrentUser();
+                homepage(user);
             }else{
                 Toast.makeText(this, "Autetication Faild", Toast.LENGTH_SHORT).show();
             }
@@ -50,10 +52,33 @@ public class LogIn extends AppCompatActivity {
         Intent intent = new Intent(this, SignUpORLogIn.class);
         startActivity(intent);
     }
-    public void homepage() {
-        Intent intent = new Intent(this, HomePage.class);
-        startActivity(intent);
+    public void homepage(FirebaseUser user) {
+        try {
+            FirebaseFirestore.getInstance().collection("users")
+                    .document(user.getUid()).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            User userMetadata = documentSnapshot.toObject(User.class);
+                            if (userMetadata != null) {
+                                Intent intent = new Intent(LogIn.this, HomePage.class);
+                                intent.putExtra("USER", userMetadata);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(this, "User data is null", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(this, "User document does not exist", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Error fetching user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Error opening login page: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
+
     public void startNewActivity (View v){
 
 

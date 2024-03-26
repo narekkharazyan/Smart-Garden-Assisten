@@ -25,7 +25,7 @@
                 android:layout_height="51dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:src="@drawable/user" />
+                android:src="@drawable/userr" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -36,7 +36,7 @@
 
         </LinearLayout>
 
-
+        <!-- New TextView for "Doctor is:" in the lower right corner -->
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

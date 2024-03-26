@@ -19,4 +19,11 @@ public class StartMenu extends AppCompatActivity {
         Intent intent = new Intent(this, SignUpORLogIn.class);
         startActivity(intent);
     }
+    public void startNewActivity1 (View v){
+
+
+        Intent intent = new Intent(this, HomePage.class);
+        startActivity(intent);
+    }
+
 }
