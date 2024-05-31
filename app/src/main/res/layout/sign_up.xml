@@ -7,6 +7,22 @@
     android:background="@drawable/fon5"
     tools:context=".SignUp">
 
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="143dp"
+        android:layout_height="26dp"
+        android:fontFamily="@font/bentayog_font"
+        android:text="Since 2023"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.882" />
+
     <EditText
         android:id="@+id/full_name"
         android:layout_width="wrap_content"
@@ -40,7 +56,20 @@
         android:layout_marginTop="304dp"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPostalAddress"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/password2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="348dp"
+        android:ems="10"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +79,7 @@
         android:id="@+id/create_button"
         android:layout_width="174dp"
         android:layout_height="42dp"
-        android:layout_marginTop="360dp"
+        android:layout_marginTop="412dp"
         android:text="Create Account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -61,12 +90,12 @@
         android:id="@+id/textView6"
         android:layout_width="325dp"
         android:layout_height="33dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="156dp"
         android:fontFamily="@font/bentayog_font"
         android:text="Create An Account"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.557"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

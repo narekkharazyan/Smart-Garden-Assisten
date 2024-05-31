@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.smartgardenassistent;
 
 import androidx.appcompat.app.AppCompatActivity;
 

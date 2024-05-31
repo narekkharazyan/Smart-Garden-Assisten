@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.smartgardenassistent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -96,11 +96,13 @@ public class weather extends AppCompatActivity {
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(result);
-                reslut_info.setText("Temperature: " + jsonObject.getJSONObject("main").getDouble("temp")+"°C");
+                reslut_info.setText("Temperature: " + jsonObject.getJSONObject("main").getDouble("temp") + "°C");
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
 
         }
     }
+
 }
+

@@ -1,16 +1,11 @@
-package com.example.myapplication;
+package com.example.smartgardenassistent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HomePage extends AppCompatActivity {
     User user;
@@ -69,6 +64,12 @@ public class HomePage extends AppCompatActivity {
     }
     public void weather(View v) {
         Intent intent = new Intent(this, weather.class);
+        startActivity(intent);
+    }
+    public void esp (View v){
+
+
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

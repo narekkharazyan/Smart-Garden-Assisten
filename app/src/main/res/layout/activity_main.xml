@@ -1,9 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@drawable/homepage"
     tools:context=".MainActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Current humidity and temperature display -->
+    <LinearLayout
+        android:id="@+id/statusLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="40dp">
+
+        <TextView
+            android:id="@+id/humidityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Humidity: --%"
+            android:textSize="10sp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/temperatureTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temperature: --°C"
+            android:textSize="10sp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/airHumidityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Air Humidity: --%"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <!-- Watering status display -->
+    <TextView
+        android:id="@+id/wateringTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Watering status: OFF"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/statusLayout"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Buttons for manual control -->
+    <LinearLayout
+        android:id="@+id/manualControlLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_below="@+id/wateringTextView"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/startWateringButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start Watering"/>
+
+        <Button
+            android:id="@+id/stopWateringButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop Watering"/>
+    </LinearLayout>
+
+    <!-- Watering method selection -->
+    <Button
+        android:id="@+id/setWateringMethodButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Watering Method"
+        android:layout_below="@+id/manualControlLayout"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Auto watering settings layout -->
+    <LinearLayout
+        android:id="@+id/autoWateringSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/setWateringMethodButton"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Auto Watering Settings"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/humidityValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Humidity Threshold: --%"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp"/>
+
+        <SeekBar
+            android:id="@+id/humiditySeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/temperatureValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temperature Threshold: --°C"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp"/>
+
+        <SeekBar
+            android:id="@+id/temperatureSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="50"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/durationValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Watering Duration: -- minutes"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp"/>
+
+        <SeekBar
+            android:id="@+id/durationSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="60"
+            android:layout_marginBottom="16dp"/>
+    </LinearLayout>
+
+    <!-- Timer settings layout -->
+    <LinearLayout
+        android:id="@+id/timersLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/autoWateringSettings"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+        <!-- Dynamically added timer views will appear here -->
+    </LinearLayout>
+
+    <!-- Add timer button -->
+    <Button
+        android:id="@+id/addTimerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Timer"
+        android:layout_below="@+id/timersLayout"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"/>
+</RelativeLayout>
