@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.smartgardenassistent;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,10 +25,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 public class profile extends AppCompatActivity {
     User user;
@@ -38,7 +42,6 @@ public class profile extends AppCompatActivity {
     private StorageReference storageRef;
     private ProgressDialog progressDialog;
 
-
     Button logOut;
     ProgressDialog dialog;
 
@@ -46,8 +49,8 @@ public class profile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-       user = getIntent().getParcelableExtra("USER");
-       // Log.d("user",user + "");
+
+        user = getIntent().getParcelableExtra("USER");
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         Toast.makeText(this, "" + user.getFullName(), Toast.LENGTH_SHORT).show();
@@ -62,22 +65,29 @@ public class profile extends AppCompatActivity {
 
         fullNameTextView.setText(fullName);
         emailTextView.setText(email);
+
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            FirebaseFirestore.getInstance().collection("users").document(currentUser.getUid())
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists() && documentSnapshot.contains("profileImageUrl")) {
-                            String imageUrl = documentSnapshot.getString("profileImageUrl");
-                            if (imageUrl != null && !imageUrl.isEmpty()) {
-                                // Использование Glide для загрузки изображения
-                                Glide.with(this)
-                                        .load(imageUrl)
-                                        .into(imageView);
-                            }
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists() && dataSnapshot.child("profileImageUrl").exists()) {
+                        String imageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            // Use Glide to load the image
+                            Glide.with(profile.this)
+                                    .load(imageUrl)
+                                    .into(imageView);
                         }
-                    })
-                    .addOnFailureListener(e -> Log.d("Firestore", "Error getting document: ", e));
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("RealtimeDatabase", "Error getting document: ", databaseError.toException());
+                }
+            });
         }
 
         activityResultLauncher = registerForActivityResult(
@@ -114,14 +124,34 @@ public class profile extends AppCompatActivity {
             }
         });
     }
+    private void deleteAccount(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Account");
+        builder.setMessage("Are you sure you want to delete your account? This action cannot be undone.");
+        builder.setPositiveButton("Delete", (dialog, which) -> {
+            // User clicked OK button. Proceed with account deletion.
+            proceedToDeleteAccount();
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            // User cancelled the dialog. Just dismiss.
+            if (dialog != null) {
+                dialog.dismiss();
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     private void openLoginActivity() {
         FirebaseAuth.getInstance().signOut();
 
         Intent intent = new Intent(this, LogIn.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Очистите back stack
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear the back stack
         startActivity(intent);
     }
-    private void deleteAccount() {
+
+    private void proceedToDeleteAccount() {
         dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
         dialog.setMessage("Loading.....");
@@ -130,30 +160,36 @@ public class profile extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             String uid = user.getUid();
-            FirebaseFirestore.getInstance().collection("users").document(uid)
-                    .delete()
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d("Firestore", "User document deleted successfully.");
-                        user.delete().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Log.d("Delete Account", "User account deleted.");
-                                FirebaseAuth.getInstance().signOut();
-                                if(dialog != null && dialog.isShowing()) {
-                                    dialog.dismiss();
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+            userRef.removeValue()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("RealtimeDatabase", "User document deleted successfully.");
+                            user.delete().addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Log.d("Delete Account", "User account deleted.");
+                                    FirebaseAuth.getInstance().signOut();
+                                    if(dialog != null && dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
+                                    openLoginActivity();
+                                } else {
+                                    Log.w("Delete Account", "Failed to delete user account.", task.getException());
+                                    if(dialog != null && dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
                                 }
-                                openLoginActivity();
-                            } else {
-                                Log.w("Delete Account", "Failed to delete user account.", task.getException());
-                                if(dialog != null && dialog.isShowing()) {
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
+                            });
+                        }
                     })
-                    .addOnFailureListener(e -> {
-                        Log.w("Firestore", "Error deleting user document", e);
-                        if(dialog != null && dialog.isShowing()) {
-                            dialog.dismiss();
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("RealtimeDatabase", "Error deleting user document", e);
+                            if(dialog != null && dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
                         }
                     });
         }else{
@@ -163,65 +199,47 @@ public class profile extends AppCompatActivity {
             }
         }
     }
+
     private void uploadImageToFirebase(Uri imageUri) {
         if (imageUri != null) {
-            // Показываем ProgressDialog при начале загрузки
             progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            // Reference to store file at "images/{userId}/{timestamp}.jpg"
             StorageReference fileRef = storageRef.child("images/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/" + System.currentTimeMillis() + ".jpg");
             fileRef.putFile(imageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // Скрываем ProgressDialog при успешной загрузке
-                            progressDialog.dismiss();
-
-                            // Get the URL of the uploaded file
-                            fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String imageUrl = uri.toString();
-                                    // Update user document with imageUrl
-                                    updateUserProfileImage(imageUrl);
-                                }
-                            });
-                            Toast.makeText(profile.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                        }
+                    .addOnSuccessListener(taskSnapshot -> {
+                        progressDialog.dismiss();
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String imageUrl = uri.toString();
+                            updateUserProfileImage(imageUrl);
+                        });
+                        Toast.makeText(profile.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Скрываем ProgressDialog при ошибке загрузки
-                            progressDialog.dismiss();
-                            Toast.makeText(profile.this, "Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                    .addOnFailureListener(e -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(profile.this, "Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         }
     }
-
 
     private void updateUserProfileImage(String imageUrl) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String uid = user.getUid();
             progressDialog.setTitle("Updating Profile...");
-            progressDialog.show(); // Показать диалог перед обновлением
+            progressDialog.show();
 
-            FirebaseFirestore.getInstance().collection("users").document(uid)
-                    .update("profileImageUrl", imageUrl)
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+            userRef.child("profileImageUrl").setValue(imageUrl)
                     .addOnSuccessListener(aVoid -> {
-                        progressDialog.dismiss(); // Закрыть диалог после успешного обновления
-                        Log.d("Firestore", "DocumentSnapshot successfully updated!");
+                        progressDialog.dismiss();
+                        Log.d("RealtimeDatabase", "DocumentSnapshot successfully updated!");
                     })
                     .addOnFailureListener(e -> {
-                        progressDialog.dismiss(); // Закрыть диалог в случае ошибки
-                        Log.w("Firestore", "Error updating document", e);
+                        progressDialog.dismiss();
+                        Log.w("RealtimeDatabase", "Error updating document", e);
                     });
         }
     }
-
-
 }

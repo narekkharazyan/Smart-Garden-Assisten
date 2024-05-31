@@ -1,40 +1,21 @@
 {
   "project_info": {
-    "project_number": "1061893892928",
-    "project_id": "smartgardenassistent",
-    "storage_bucket": "smartgardenassistent.appspot.com"
+    "project_number": "250741191848",
+    "project_id": "smartgardenassistent1",
+    "storage_bucket": "smartgardenassistent1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1061893892928:android:3a66c6d6f0a7d21f6ce8a5",
+        "mobilesdk_app_id": "1:250741191848:android:fe25f59edfc119bbc8be9d",
         "android_client_info": {
-          "package_name": "com.example.myapplication"
+          "package_name": "com.example.smartgardenassistent"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC3n_vEDoawowBFNLPWF5OCj0W1H9xLNDI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1061893892928:android:83cc38bce81596e76ce8a5",
-        "android_client_info": {
-          "package_name": "com.example.myapplication.ui"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC3n_vEDoawowBFNLPWF5OCj0W1H9xLNDI"
+          "current_key": "AIzaSyDJn4IF0JzHrRhCk-QzPBWr1qo3fP1uTXg"
         }
       ],
       "services": {

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.smartgardenassistent;
 
 import static android.content.ContentValues.TAG;
 
@@ -14,7 +14,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUp extends AppCompatActivity {
 
@@ -22,6 +23,7 @@ public class SignUp extends AppCompatActivity {
     EditText emailEditText;
     EditText fullnameEditText;
     EditText passwordEditText;
+    EditText confirmPasswordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +33,12 @@ public class SignUp extends AppCompatActivity {
         fullnameEditText = findViewById(R.id.full_name);
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
+        confirmPasswordEditText = findViewById(R.id.password2);
         if(savedInstanceState != null){
             fullnameEditText.setText(savedInstanceState.getString("fullname"));
             emailEditText.setText(savedInstanceState.getString("email"));
             passwordEditText.setText(savedInstanceState.getString("password"));
+            passwordEditText.setText(savedInstanceState.getString("confirmPassword"));
         }
         signUp.setOnClickListener(new View.OnClickListener() {
 
@@ -43,7 +47,8 @@ public class SignUp extends AppCompatActivity {
                 String fullname = fullnameEditText.getText().toString().trim();
                 String email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
-                if (fullname.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                String confirmPassword = confirmPasswordEditText.getText().toString().trim();
+                if (fullname.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     Toast.makeText(SignUp.this, "Please fill out all the fields", Toast.LENGTH_SHORT).show();
                     return; // Stop further execution if any field is empty
                 }
@@ -51,10 +56,15 @@ public class SignUp extends AppCompatActivity {
                     Toast.makeText(SignUp.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
                     return; // Stop further execution if email is not valid
                 }
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-               /* db.collection("Users").whereEqualTo("email",email).get().addOnCanceledListener(task -> {
-                    if (task.isSuccessfully)
-                });*/
+                if (!password.equals(confirmPassword)) {
+                    Toast.makeText(SignUp.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                    return; // Stop further execution if passwords do not match
+                }
+
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference usersRef = database.getReference("users");
+
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(SignUp.this, createUserTask -> {
@@ -62,20 +72,32 @@ public class SignUp extends AppCompatActivity {
                                 // User created successfully
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                 if (firebaseUser != null) {
+                                    firebaseUser.sendEmailVerification().addOnCompleteListener(task2 -> {
+                                        if (task2.isSuccessful()) {
+                                            Log.d(TAG, "Email verification sent.");
+                                            // Notify the user to check their email for verification
+                                            Toast.makeText(SignUp.this, "Registration successful. Please check your email for verification.", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Log.e(TAG, "sendEmailVerification", task2.getException());
+                                            Toast.makeText(SignUp.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
                                     User newUser = new User(fullname, email, password);
-                                    db.collection("users").document(firebaseUser.getUid()).set(newUser)
+                                    usersRef.child(firebaseUser.getUid()).setValue(newUser)
                                             .addOnSuccessListener(aVoid -> {
                                                 Log.d(TAG, "User data added successfully!");
                                                 // Clear input fields after successful signup
                                                 fullnameEditText.setText("");
                                                 emailEditText.setText("");
                                                 passwordEditText.setText("");
+                                                confirmPasswordEditText.setText("");
                                                 // Start the login activity
                                                 login();
                                             })
                                             .addOnFailureListener(e -> {
-                                                Log.e(TAG, "Error adding user data to Firestore", e);
-                                                Toast.makeText(SignUp.this, "Failed to add user data to Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Log.e(TAG, "Error adding user data to Realtime Database", e);
+                                                Toast.makeText(SignUp.this, "Failed to add user data to Realtime Database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                             });
 
                                 } else {
@@ -89,6 +111,7 @@ public class SignUp extends AppCompatActivity {
                                 Toast.makeText(SignUp.this, "Failed to create user: " + createUserTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
+
 
 
             }

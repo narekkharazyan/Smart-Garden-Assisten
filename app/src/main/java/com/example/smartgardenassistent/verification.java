@@ -1,14 +1,14 @@
-package com.example.myapplication;
+package com.example.smartgardenassistent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class myplants extends AppCompatActivity {
+public class verification extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_myplants);
+        setContentView(R.layout.activity_verification);
     }
 }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +17,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+        <activity
+            android:name=".SetActivityTime"
+            android:exported="false" />
+        <activity
+            android:name=".esprtdb"
+            android:exported="false" />
+        <activity
+            android:name=".aboutT"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Esp"
+            android:exported="false" />
+        <activity
+            android:name=".realtime"
+            android:exported="false" />
+        <activity
+            android:name=".verification"
+            android:exported="false" />
+        <activity
+            android:name=".Map"
+            android:exported="false" />
+        <activity
+            android:name=".map"
+            android:exported="false" />
         <activity
             android:name=".ForgotPassword"
             android:exported="false" />
@@ -31,22 +60,18 @@
             android:name=".weather"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".settings"
             android:exported="false" />
         <activity
             android:name=".HomePage"
-            android:exported="false" />
-        <activity
-            android:name=".LogIn"
-            android:exported="false" />
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".LogIn" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".SignUp"
             android:exported="false" />
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".LogIn"
             android:exported="false"
             android:label="@string/title_activity_login" />
         <activity
@@ -61,6 +86,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Добавляем новую активность -->
+        <activity
+            android:name=".Settings"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBRUnPU0X-oQqWgI6MGt6ZyPgZpMmkkZPg" />
     </application>
 
 </manifest>
